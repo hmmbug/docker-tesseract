@@ -3,7 +3,7 @@
 FROM alpine:3.5
 LABEL maintainer "mark@markhollow.com"
 
-RUN apk add --no-cache jpeg libpng tiff zlib && \
+RUN apk add --no-cache jpeg libpng tiff zlib libstdc++ libgcc libgomp && \
 	apk add --no-cache build-base gcc abuild binutils autoconf pkgconfig \
 			automake libtool git jpeg-dev libpng-dev tiff-dev zlib-dev && \
 	git clone https://github.com/peti/autoconf-archive.git && \
@@ -15,13 +15,13 @@ RUN apk add --no-cache jpeg libpng tiff zlib && \
 	curl -o - https://codeload.github.com/DanBloomberg/leptonica/tar.gz/1.74.0 | tar xzf - && \
 	cd leptonica-1.74.0 && \
 	./autobuild && \
-	./configure && \
+	./configure --prefix=/usr/local && \
 	make install && \
 	cd /build && \
 	curl -o - https://codeload.github.com/tesseract-ocr/tesseract/tar.gz/master | tar xzf - && \
 	cd tesseract-master && \
 	./autogen.sh && \
-	./configure && \
+	./configure --prefix=/usr/local && \
 	make install && \
 	ldconfig / && \
 	cd /usr/local/share/tessdata && \
@@ -32,6 +32,7 @@ RUN apk add --no-cache jpeg libpng tiff zlib && \
 	curl -o tha.traineddata https://raw.githubusercontent.com/tesseract-ocr/tessdata/4.00/tha.traineddata && \
 	apk del build-base gcc abuild binutils autoconf pkgconfig \
 			automake libtool git jpeg-dev libpng-dev tiff-dev zlib-dev && \
+	apk add --no-cache libstdc++ libgcc libgomp && \
 	rm -rf /var/cache/apk/* /build
 
 ENTRYPOINT ["tesseract"]
