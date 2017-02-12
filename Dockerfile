@@ -1,5 +1,3 @@
-#!/bin/bash
-
 FROM alpine:3.5
 LABEL maintainer "mark@markhollow.com"
 
