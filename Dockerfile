@@ -1,17 +1,18 @@
-FROM alpine:3.5
+FROM alpine:3.7
 LABEL maintainer "mark@markhollow.com"
 
 RUN apk add --no-cache jpeg libpng tiff zlib libstdc++ libgcc libgomp && \
 	apk add --no-cache build-base gcc abuild binutils autoconf pkgconfig \
-			automake libtool git jpeg-dev libpng-dev tiff-dev zlib-dev && \
+			automake libtool git jpeg-dev libpng-dev tiff-dev zlib-dev \
+			icu icu-dev && \
 	git clone https://github.com/peti/autoconf-archive.git && \
 	mkdir -p /usr/share/aclocal && \
 	cp -a autoconf-archive/m4/* /usr/share/aclocal && \
 	rm -rf autoconf-archive && \
 	mkdir -p /build && \
 	cd /build && \
-	curl -o - https://codeload.github.com/DanBloomberg/leptonica/tar.gz/1.74.0 | tar xzf - && \
-	cd leptonica-1.74.0 && \
+	curl -o - https://codeload.github.com/DanBloomberg/leptonica/tar.gz/1.74.2 | tar xzf - && \
+	cd leptonica-1.74.2 && \
 	./autobuild && \
 	./configure --prefix=/usr/local && \
 	make install && \
